@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async Operations</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+            var ws_path = ws_scheme + '://' + window.location.host + "/async_operations/";
+
+            var socket = new WebSocket(ws_path);
+
+            socket.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                console.log("Прийнято повідомлення від сервера:", data.message, data.operation); // Виводимо повідомлення у консоль
+                updateTable(data.operation,data.message); // Оновлення таблиці
+            };
+
+            function updateTable(operation,message) {
+                var table = document.getElementById("operationsTable");
+                var newRow = table.insertRow();
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                
+                cell1.innerHTML = operation; // Назва операції
+                cell2.innerHTML = "Operation done"; // Результат
+                cell3.innerHTML = message; // Юзер
+                cell4.innerHTML = new Date().toLocaleString(); // Дата/час завершення
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Async Operations</h1>
+    <table id="operationsTable" border="1">
+        <tr>
+            <th>Назва операції</th>
+            <th>Результат</th>
+            <th>Юзер</th>
+            <th>Дата/час завершення</th>
+        </tr>
+    </table>
+</body>
+</html>
+
+
